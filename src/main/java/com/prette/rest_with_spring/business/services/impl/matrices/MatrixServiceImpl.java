@@ -2,6 +2,7 @@ package com.prette.rest_with_spring.business.services.impl.matrices;
 
 import com.prette.rest_with_spring.business.services.interfaces.matrices.MatrixService;
 import com.prette.rest_with_spring.controller.dtos.matrices.MatrixRequestDTO;
+import com.prette.rest_with_spring.exceptions.UnprocessableEntityException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +14,7 @@ public class MatrixServiceImpl implements MatrixService {
         double[][] matrixB = dto.matrixB();
 
         if((matrixA.length != matrixB.length) || (matrixA[0].length != matrixB[0].length)){
-            throw new IllegalArgumentException("Matrices must have the same size!");
+            throw new UnprocessableEntityException("Matrices must have the same size!");
         }
 
         int rows = matrixA.length;
@@ -41,7 +42,7 @@ public class MatrixServiceImpl implements MatrixService {
 
 
         if(colsA != rowsB){
-            throw new IllegalArgumentException("Number of columns of A must be equal to the number of rows of B");
+            throw new UnprocessableEntityException("Number of columns of A must be equal to the number of rows of B");
         }
 
         double[][] result = new double[rowsA][colsB];
