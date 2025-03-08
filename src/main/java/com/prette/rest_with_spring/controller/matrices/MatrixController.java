@@ -1,7 +1,7 @@
 package com.prette.rest_with_spring.controller.matrices;
 
 import com.prette.rest_with_spring.business.services.interfaces.matrices.MatrixService;
-import com.prette.rest_with_spring.controller.dtos.matrices.MatrixRequestDTO;
+import com.prette.rest_with_spring.business.dtos.matrices.MatrixRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
+
+
 @RestController
 @RequestMapping("/matrix")
 public class MatrixController {
 
     private final MatrixService matrixService;
+    //private Logger logger = LoggerFactory.getLogger(MatrixController.class.getName());
 
     @Autowired
     public MatrixController(MatrixService matrixService) {
@@ -43,6 +46,7 @@ public class MatrixController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<double[][]> multiplyMatrices(@RequestBody MatrixRequestDTO request) {
+
         double[][] result =  matrixService.multiplyMatrices(request);
         return ResponseEntity.ok(result);
     }

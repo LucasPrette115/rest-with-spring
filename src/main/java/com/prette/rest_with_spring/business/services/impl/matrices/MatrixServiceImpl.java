@@ -1,7 +1,7 @@
 package com.prette.rest_with_spring.business.services.impl.matrices;
 
 import com.prette.rest_with_spring.business.services.interfaces.matrices.MatrixService;
-import com.prette.rest_with_spring.controller.dtos.matrices.MatrixRequestDTO;
+import com.prette.rest_with_spring.business.dtos.matrices.MatrixRequestDTO;
 import com.prette.rest_with_spring.exceptions.UnprocessableEntityException;
 import org.springframework.stereotype.Service;
 
