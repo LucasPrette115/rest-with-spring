@@ -1,6 +1,8 @@
 package com.prette.rest_with_spring.business.services.impl.matrices;
 
+import com.prette.rest_with_spring.business.dtos.matrices.MatrixDeterminantRequestDTO;
 import com.prette.rest_with_spring.business.dtos.matrices.MatrixRequestDTO;
+import com.prette.rest_with_spring.business.dtos.matrices.MatrixResponseDTO;
 import com.prette.rest_with_spring.exceptions.UnprocessableEntityException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,9 +29,9 @@ class MatrixServiceImplTest {
         when(mockDto.matrixA()).thenReturn(matrixA);
         when(mockDto.matrixB()).thenReturn(matrixB);
 
-        double[][] result = matrixService.addMatrices(mockDto);
+        MatrixResponseDTO result = matrixService.addMatrices(mockDto);
 
-        assertThat(result).isDeepEqualTo(expected);
+        assertThat(result.matrixResult()).isDeepEqualTo(expected);
     }
 
     @Test
@@ -51,14 +53,16 @@ class MatrixServiceImplTest {
         MatrixRequestDTO mockDto = mock(MatrixRequestDTO.class);
         double[][] matrixA = {{1, 2}, {3, 4}};
         double[][] matrixB = {{2, 0}, {1, 2}};
-        double[][] expected = {{4, 4}, {10, 8}};
+        MatrixResponseDTO expected;
+        double[][] resultMatrix = {{4, 4}, {10, 8}};
+        expected = new MatrixResponseDTO(resultMatrix);
 
         when(mockDto.matrixA()).thenReturn(matrixA);
         when(mockDto.matrixB()).thenReturn(matrixB);
 
-        double[][] result = matrixService.multiplyMatrices(mockDto);
+        MatrixResponseDTO result = matrixService.multiplyMatrices(mockDto);
 
-        assertThat(result).isDeepEqualTo(expected);
+        assertThat(result.matrixResult()).isDeepEqualTo(expected.matrixResult());
     }
 
     @Test
@@ -73,5 +77,33 @@ class MatrixServiceImplTest {
         assertThatThrownBy(() -> matrixService.multiplyMatrices(mockDto))
                 .isInstanceOf(UnprocessableEntityException.class)
                 .hasMessage("Number of columns of A must be equal to the number of rows of B");
+    }
+
+    @Test
+    void shouldCalculateDeterminantCorrectly() {
+        MatrixDeterminantRequestDTO mockDto = mock(MatrixDeterminantRequestDTO.class);
+        double[][] matrix = {
+                                {1, 2},
+                                {3, 4}
+                            };
+        double expected = -2;
+
+        when(mockDto.matrix()).thenReturn(matrix);
+
+        double result = matrixService.calculateDeterminant(mockDto);
+
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCalculatingDeterminantInvalidMatrix() {
+        MatrixDeterminantRequestDTO mockDto = mock(MatrixDeterminantRequestDTO.class);
+        double[][] matrix = {{1, 2, 3}};
+
+        when(mockDto.matrix()).thenReturn(matrix);
+
+        assertThatThrownBy(() -> matrixService.calculateDeterminant(mockDto))
+                .isInstanceOf(UnprocessableEntityException.class)
+                .hasMessage("The matrix must be square.");
     }
 }

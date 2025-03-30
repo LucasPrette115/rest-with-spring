@@ -1,5 +1,7 @@
 package com.prette.rest_with_spring.controller.matrices;
 
+import com.prette.rest_with_spring.business.dtos.matrices.MatrixDeterminantRequestDTO;
+import com.prette.rest_with_spring.business.dtos.matrices.MatrixResponseDTO;
 import com.prette.rest_with_spring.business.services.interfaces.matrices.MatrixService;
 import com.prette.rest_with_spring.business.dtos.matrices.MatrixRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,8 +35,8 @@ public class MatrixController {
             @ApiResponse(responseCode = "400", description = "Client error"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<double[][]> addMatrices(@RequestBody MatrixRequestDTO request) {
-        double[][] result = matrixService.addMatrices(request);
+    public ResponseEntity<MatrixResponseDTO> addMatrices(@RequestBody MatrixRequestDTO request) {
+        MatrixResponseDTO result = matrixService.addMatrices(request);
         return ResponseEntity.ok(result);
     }
 
@@ -45,9 +47,22 @@ public class MatrixController {
             @ApiResponse(responseCode = "400", description = "Client error"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<double[][]> multiplyMatrices(@RequestBody MatrixRequestDTO request) {
+    public ResponseEntity<MatrixResponseDTO> multiplyMatrices(@RequestBody MatrixRequestDTO request) {
 
-        double[][] result =  matrixService.multiplyMatrices(request);
+        MatrixResponseDTO result =  matrixService.multiplyMatrices(request);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/determinant")
+    @Operation(description = "Endpoint responsible for calculating the determinant of a given matrix")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Client error"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Double> calculateDeterminant(@RequestBody MatrixDeterminantRequestDTO request) {
+
+        double result =  matrixService.calculateDeterminant(request);
         return ResponseEntity.ok(result);
     }
 
